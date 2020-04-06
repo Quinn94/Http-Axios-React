@@ -14,7 +14,7 @@ class FullPost extends Component {
             //for the 1st it is because of null, for the 2nd because true and with diff id
             if(!this.state.loadedPost || (this.state.loadedPost && this.state.loadedPost.id !== this.props.id)){ 
 
-                axios.get('https://jsonplaceholder.typicode.com/posts/' + this.props.id)
+                axios.get('/posts/' + this.props.id)
                 .then(response=>{
                     this.setState({loadedPost: response.data}) //infinite loop
                     //Hence, to send Http request if only we loaded a new post
@@ -26,7 +26,7 @@ class FullPost extends Component {
     }
 
     deletePostHandler =() => {
-        axios.delete('https://jsonplaceholder.typicode.com/posts/' + this.props.id)
+        axios.delete('/posts/' + this.props.id)
             .then(response=> {
                 console.log(response)
             })
