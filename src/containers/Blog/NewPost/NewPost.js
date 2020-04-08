@@ -1,13 +1,20 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+import {Redirect} from 'react-router-dom';
 
 import './NewPost.css';
-import axios from 'axios';
 
 class NewPost extends Component {
     state = {
         title: '',
         content: '',
-        author: 'Quinn'
+        author: 'Quinn',
+        submitted: false,
+    }
+
+    componentDidMount() {
+        // If unauth => this.props.history.replace('/posts');
+        console.log(this.props);
     }
 
     postDataHandler = () => {
@@ -18,11 +25,17 @@ class NewPost extends Component {
         };
         axios.post('/posts/', data)
             .then(response => {
-                console.log(response)
+                console.log(response);
+                this.props.history.replace('/posts');
+                // if you use replace, you cannot click on 'back', it will replace the page or you can use this - this.setState( { submitted: true } );
             })
     };
 
     render () {
+        let redirect = null;
+        if (this.state.submitted) {
+            redirect = <Redirect to="/posts" />;
+        }
         return (
             <div className="NewPost">
                 <h1>Add a Post</h1>

@@ -11,17 +11,20 @@ axios.defaults.headers.post['Content-type'] = 'application/json';
 
 axios.interceptors.request.use(request => {
     console.log(request);
+    //Edit request config
     return request;
 }, error => {
-    console.log(error); //this is just logging to the console, maybe for the serve to acknowledge, will still catch error in respective component
+    console.log(error); 
     return Promise.reject(error)
+    //this is just logging to the console, maybe for the server to acknowledge, will still catch error in respective component
 });
 
 axios.interceptors.response.use(response => {
     console.log(response);
+    //Edit response config
     return response;
 }, error => {
-    console.log(error); //this is just logging to the console, maybe for the serve to acknowledge, will still catch error in respective component
+    console.log(error);
     return Promise.reject(error)
 });
 
