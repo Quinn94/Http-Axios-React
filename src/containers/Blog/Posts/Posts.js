@@ -1,72 +1,88 @@
-import React , {Component} from 'react';
-import axios from '../../../axios';
-import {Route} from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from "../../../axios";
+import { Route } from "react-router-dom";
 
-import './Posts.css';
-import Post from '../../../components/Post/Post';
-import FullPost from '../FullPost/FullPost';
+import "./Posts.css";
+import Post from "../../../components/Post/Post";
+import FullPost from "../FullPost/FullPost";
 
-class Posts extends Component {
-  state = {
-    posts: []
-  };
+const Posts = (props) => {
+  const [posts, setPosts] = useState([]);
+  const [error, setError] = useState(false);
 
-  componentDidMount() {
-    console.log(this.props);
-    axios.get("/posts")
-      .then(response => {
+  useEffect(() => {
+    console.log(props);
+    axios
+      .get("/posts")
+      .then((response) => {
         const posts = response.data.slice(0, 4);
-        const updatedPosts = posts.map(post => {
-          return {
-            ...post, 
+        const updatedPosts = posts.map((post) => {
+          let author;
+          return [
+            ...post,
             //distribute the property that we got from posts
-            author: "Quinn" 
+            // (author: "Quinn"),
             //then add a new property hard-code
-          };
+          ];
         });
-        this.setState({ posts: updatedPosts });
-        // console.log(response)
+        setPosts(updatedPosts);
       })
-      .catch(error => {
-        // this.setState({ error: true });
+      .catch((error) => {
         console.log(error);
+        setError(true);
       });
-  }
+  }, []);
 
-  postSelectedHandler = id => {
+  // componentDidMount() {
+  //   console.log(this.props);
+  //   axios.get("/posts")
+  //     .then(response => {
+  //       const posts = response.data.slice(0, 4);
+  //       const updatedPosts = posts.map(post => {
+  //         return {
+  //           ...post,
+  //           //distribute the property that we got from posts
+  //           author: "Quinn"
+  //           //then add a new property hard-code
+  //         };
+  //       });
+  //       this.setState({ posts: updatedPosts });
+  //       // console.log(response)
+  //     })
+  //     .catch(error => {
+  //       // this.setState({ error: true });
+  //       console.log(error);
+  //     });
+  // }
+
+  const postSelectedHandler = (id) => {
     // this.props.history.push({pathname: '/posts/' + id});
-    this.props.history.push('/posts/' + id);
+    props.history.push("/posts/" + id);
   };
 
-  render() {
-    let posts = <p style={{textAlign: 'center'}}>Something went wrong!</p>;
+  let post = <p style={{ textAlign: "center" }}>Something went wrong!</p>;
 
-    if(!this.state.error) {
-      posts = this.state.posts.map(post => {
-        return (
-          // <Link to={"/posts/" + post.id} key={post.id}>
-          <Post
-            key={post.id}
-            title={post.title}
-            author={post.author}
-            clicked={() => this.postSelectedHandler(post.id)}
-          />
-          // </Link>
-        );
-      });
-    }
-
-    return (
-      <div>
-        <section className="Posts">
-          {posts}
-        </section>
-        <Route path={this.props.match.url + '/:id'} exact component={FullPost} />
-      </div>
-    );
+  if (!error) {
+    post = posts.map((post) => {
+      return (
+        // <Link to={"/posts/" + post.id} key={post.id}>
+        <Post
+          key={post.id}
+          title={post.title}
+          author={post.author}
+          clicked={() => this.postSelectedHandler(post.id)}
+        />
+        // </Link>
+      );
+    });
   }
-}
+
+  return (
+    <div>
+      <section className="Posts">{posts}</section>
+      <Route path={props.match.url + "/:id"} exact component={FullPost} />
+    </div>
+  );
+};
 
 export default Posts;
-
-
